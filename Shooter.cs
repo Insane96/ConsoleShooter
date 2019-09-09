@@ -46,7 +46,7 @@ namespace Shooter
 																size: new Vector2(3, 2),
 																shape: new string[2, 3]
 																{
-																				{" ","ı"," "},
+																				{" ","■"," "},
 																				{"█","█","█"},
 																}
 												);
@@ -55,7 +55,8 @@ namespace Shooter
 												List<Enemy> enemies = new List<Enemy>();
 												enemies.Add(new Enemy(
 																health: 100f,
-																damage: 15f,
+																damage: 10f,
+																pos: new Vector2(Renderer.WINDOW_WIDTH / 2, Utils.GetRandomFloat(random, 10, 15)),
 																shootingPos: new Vector2(1, 1),
 																movementSpeed: 4f,
 																maxMovementSpeed: 8f,
@@ -72,7 +73,8 @@ namespace Shooter
 												));
 												enemies.Add(new Enemy(
 																health: 300f,
-																damage: 45f,
+																damage: 30f,
+																pos: new Vector2(Renderer.WINDOW_WIDTH / 2, Utils.GetRandomFloat(random, 0, 5)),
 																shootingPos: new Vector2(2, 1),
 																movementSpeed: 2f,
 																maxMovementSpeed: 3f,
@@ -206,7 +208,6 @@ namespace Shooter
 																				fps = (1f / deltaTime);
 																}
 
-																//Thread.Sleep(50);
 												} while (!keyPressed.Key.Equals(ConsoleKey.Escape));
 								}
 				}

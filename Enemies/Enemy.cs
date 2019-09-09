@@ -32,7 +32,7 @@ namespace Shooter
 
 								public bool isDead = false;
 
-								public Enemy(float health, float damage, Vector2 shootingPos, float movementSpeed, float maxMovementSpeed, float increaseMovementSpeed, float initialAttackSpeed, float maxAttackSpeed, float cooldownReduction, Vector2 size, string[,] shape)
+								public Enemy(float health, float damage, Vector2 pos, Vector2 shootingPos, float movementSpeed, float maxMovementSpeed, float increaseMovementSpeed, float initialAttackSpeed, float maxAttackSpeed, float cooldownReduction, Vector2 size, string[,] shape)
 								{
 												this.health = health;
 												this.maxHealth = health;
@@ -43,9 +43,7 @@ namespace Shooter
 												this.shootingPos = shootingPos;
 												this.size = size;
 												this.shape = shape;
-												double x = Utils.GetRandomFloat(Shooter.random, 0, Renderer.WINDOW_WIDTH - this.size.GetXInt());
-												double y = Utils.GetRandomFloat(Shooter.random, 0, Renderer.WINDOW_HEIGHT - 15);
-												this.pos = new Vector2((float)x, (float)y);
+												this.pos = pos;
 												this.direction = Directions.LEFT;
 												this.attackSpeed = initialAttackSpeed;
 												this.timeToShoot = this.attackSpeed;

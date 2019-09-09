@@ -38,15 +38,12 @@ namespace Shooter
 
         public void Draw()
         {
-												ConsoleColor color = ConsoleColor.Cyan;
-												if (shootTimeCooldown > 0)
-																color = ConsoleColor.DarkRed;
 												for (int x = 0; x < shape.GetLength(1); x++)
 												{
 																for (int y = 0; y < shape.GetLength(0); y++)
 																{
 																				if (!shape[y, x].Equals(" "))
-																								Renderer.Put(shape[y, x], this.pos.Add(x, y), color);
+																								Renderer.Put(shape[y, x], this.pos.Add(x, y), ConsoleColor.Cyan);
 																}
 												}
 												Renderer.Put("Health: " + this.health + "/" + this.maxHealth, new Vector2(0, Console.WindowHeight - 1));
