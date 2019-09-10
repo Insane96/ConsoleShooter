@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shooter
+namespace Shooter.Engine
 {
     class Utils
 				{
@@ -20,26 +20,6 @@ namespace Shooter
         }
 
 								/// <summary>
-								/// Removes all the stacked key inputs every frame, instead of reading them later. Mostly useful on low FPS
-								/// </summary>
-        public static void ClearKeyBuffer()
-        {
-            while (Console.KeyAvailable)
-                Console.ReadKey(true);
-        }
-
-								/// <summary>
-								/// Returns a random float number between min (inclusive) and max (exclusive). If max is smaller than min then min is returned
-								/// </summary>
-								/// <param name="min"></param>
-								/// <param name="max"></param>
-								/// <returns></returns>
-								public static float GetRandomFloat(float min, float max)
-        {
-            return max >= min ? (float) Engine.random.NextDouble() * (max - min) + min : min;
-								}
-
-								/// <summary>
 								/// Returns the position in an array given a matrix x and y position and matrix width
 								/// </summary>
 								/// <param name="x"></param>
@@ -48,7 +28,7 @@ namespace Shooter
 								/// <returns></returns>
 								public static int GetArrayPosition(int x, int y, int width = Renderer.WINDOW_WIDTH)
 								{
-												return ((y - 1) * width) + x;
+												return (y * width) + x;
 								}
 
 								/// <summary>

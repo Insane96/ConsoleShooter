@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Shooter.Engine;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Shooter.Utils;
 
 namespace Shooter
 {
@@ -62,11 +62,11 @@ namespace Shooter
         {
             switch (direction)
             {
-                case Directions.RIGHT:
+                case Utils.Directions.RIGHT:
                     if (this.pos.Add(movementSpeed, 0).GetXInt() < Renderer.WINDOW_WIDTH)
                         this.pos = this.pos.Add(movementSpeed, 0);
                     break;
-                case Directions.LEFT:
+                case Utils.Directions.LEFT:
                     if (this.pos.Add(-movementSpeed, 0).GetXInt() >= 0)
                         this.pos = this.pos.Add(-movementSpeed, 0);
                     break;
@@ -78,12 +78,12 @@ namespace Shooter
 								public void Update()
 								{
 												if (shootTimeCooldown > 0)
-																shootTimeCooldown -= Shooter.deltaTime;
+																shootTimeCooldown -= Time.deltaTime;
 								}
 
 								public bool HasBeenHitBy(Projectile projectile)
 								{
-												if (projectile.direction.Equals(Directions.UP))
+												if (projectile.direction.Equals(Utils.Directions.UP))
 																return false;
 												int pX = projectile.pos.GetXInt();
 												int pY = projectile.pos.GetYInt();
@@ -100,7 +100,7 @@ namespace Shooter
         {
 												if (shootTimeCooldown <= 0)
 												{
-																Projectile projectile = new Projectile(2f, 15f, this.pos + this.shootingPos, Directions.UP, "Û");
+																Projectile projectile = new Projectile(2f, 15f, this.pos + this.shootingPos, Utils.Directions.UP, "Û");
 																Shooter.AddProjectile(projectile);
 																shootTimeCooldown = shootSpeed;
 												}

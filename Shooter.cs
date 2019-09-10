@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Shooter.Engine;
 
 namespace Shooter
 {
@@ -14,10 +15,6 @@ namespace Shooter
 								static List<Projectile> projectiles = new List<Projectile>();
 
 								public static bool gameOver = false;
-
-								static Stopwatch sw = new Stopwatch();
-
-								public static float deltaTime;
 
 								public static void AddProjectile(Projectile p)
 								{
@@ -53,7 +50,7 @@ namespace Shooter
 												enemies.Add(new Enemy(
 																health: 100f,
 																damage: 8f,
-																pos: new Vector2(Renderer.WINDOW_WIDTH / 2, Utils.GetRandomFloat(10, 15)),
+																pos: new Vector2(Renderer.WINDOW_WIDTH / 2, Rand.GetRandomFloat(10, 15)),
 																shootingPos: new Vector2(1, 1),
 																movementSpeed: 4f,
 																maxMovementSpeed: 8f,
@@ -71,7 +68,7 @@ namespace Shooter
 												enemies.Add(new Enemy(
 																health: 300f,
 																damage: 30f,
-																pos: new Vector2(Renderer.WINDOW_WIDTH / 2, Utils.GetRandomFloat(0, 5)),
+																pos: new Vector2(Renderer.WINDOW_WIDTH / 2, Rand.GetRandomFloat(0, 5)),
 																shootingPos: new Vector2(2, 1),
 																movementSpeed: 2f,
 																maxMovementSpeed: 3f,
@@ -88,36 +85,26 @@ namespace Shooter
 																}
 												));
 
-												ConsoleKeyInfo keyPressed = new ConsoleKeyInfo();
-
-												/*Console.Beep(329, 200);
-												Console.Beep(329, 300);
-												Console.Beep(329, 300);
-												Console.Beep(294, 200);
-												Console.Beep(329, 400);
-												Console.Beep(392, 500);
-												Console.Beep(196, 400);*/
+												/*Console.Beep(329, 100);
+												Console.Beep(329, 150);
+												Console.Beep(329, 150);
+												Console.Beep(294, 100);
+												Console.Beep(329, 200);
+												Console.Beep(392, 250);
+												Console.Beep(196, 200);*/
 
 												do
 												{
-																//Stopwatch
-																sw.Start();
-
-
-																//Get current Key input
-																if (Console.KeyAvailable)
-																				keyPressed = Console.ReadKey(true);
-																else keyPressed = new ConsoleKeyInfo();
-																//Utils.ClearKeyBuffer();
-
+																Engine.Engine.MainLoop();
+																
 																if (!gameOver)
 																{
 																				//Input
-																				if (keyPressed.Key.Equals(ConsoleKey.RightArrow))
+																				if (Input.IsKeyPressed(ConsoleKey.RightArrow))
 																								player.Move(Utils.Directions.RIGHT);
-																				if (keyPressed.Key.Equals(ConsoleKey.LeftArrow))
+																				if (Input.IsKeyPressed(ConsoleKey.LeftArrow))
 																								player.Move(Utils.Directions.LEFT);
-																				if (keyPressed.Key.Equals(ConsoleKey.Spacebar))
+																				if (Input.IsKeyPressed(ConsoleKey.Spacebar))
 																								player.Shoot();
 
 																				//Update
@@ -186,25 +173,19 @@ namespace Shooter
 																if (gameOver)
 																				Renderer.Put("Game Over", new Vector2(Renderer.WINDOW_WIDTH / 2 - 4, Renderer.WINDOW_HEIGHT / 2), ConsoleColor.Red);
 
-																if (1f / deltaTime >= 10f)
-																				Renderer.Put("FPS: " + Math.Round(fps, 0), new Vector2(Renderer.WINDOW_WIDTH / 2, Renderer.WINDOW_HEIGHT - 1));
+																if (1f / Time.deltaTime >= 10f)
+																				Console.Title = "FPS: " + Math.Round(fps, 0);
 																else
-																				Renderer.Put("FPS: " + Math.Round(fps, 1), new Vector2(Renderer.WINDOW_WIDTH / 2, Renderer.WINDOW_HEIGHT - 1));
-
-																Renderer.Draw();
-
-																sw.Stop();
-																deltaTime = sw.ElapsedMilliseconds / 1000f;
-																sw.Reset();
-
-																fpsDisplayTime -= deltaTime;
+																				Console.Title = "FPS: " + Math.Round(fps, 1);
+																																
+																fpsDisplayTime -= Time.deltaTime;
 																if (fpsDisplayTime <= 0f)
 																{
 																				fpsDisplayTime = 1f;
-																				fps = (1f / deltaTime);
+																				fps = (1f / Time.deltaTime);
 																}
 
-												} while (!keyPressed.Key.Equals(ConsoleKey.Escape));
+												} while (!Input.IsKeyPressed(ConsoleKey.Escape));
 								}
 				}
 }

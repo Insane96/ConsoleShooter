@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Shooter.Engine;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Shooter.Utils;
 
 namespace Shooter
 {
@@ -14,7 +14,7 @@ namespace Shooter
 								public float maxHealth;
 								public float damage;
 								public Vector2 pos;
-								public Directions direction;
+								public Utils.Directions direction;
 								public float movementSpeed;
 								public float maxMovementSpeed;
 								public float increaseMovementSpeed;
@@ -44,7 +44,7 @@ namespace Shooter
 												this.size = size;
 												this.shape = shape;
 												this.pos = pos;
-												this.direction = Directions.LEFT;
+												this.direction = Utils.Directions.LEFT;
 												this.attackSpeed = initialAttackSpeed;
 												this.timeToShoot = this.attackSpeed;
 												this.maxAttackSpeed = maxAttackSpeed;
@@ -65,44 +65,44 @@ namespace Shooter
 												{
 																Vector2 p = this.pos.Add(0, -1);
 																if (this.pos.GetYInt() == 0)
-																				p = p.Add(0, this.size.GetXInt());
+																				p = p.Add(0, this.size.GetXInt() - 1);
 																Renderer.Put(health.ToString(), p);
 												}
 								}
 
 								public void Update()
 								{
-												timeSinceDamaged += Shooter.deltaTime;
+												timeSinceDamaged += Time.deltaTime;
 
-												if (direction == Directions.LEFT)
+												if (direction == Utils.Directions.LEFT)
 												{
-																this.pos = this.pos.Add(-this.movementSpeed * Shooter.deltaTime, 0);
+																this.pos = this.pos.Add(-this.movementSpeed * Time.deltaTime, 0);
 																if (this.pos.GetXInt() <= 0)
 																{
-																				this.direction = Directions.RIGHT;
+																				this.direction = Utils.Directions.RIGHT;
 																				Buff();
 																}
 												}
-												else if (direction == Directions.RIGHT)
+												else if (direction == Utils.Directions.RIGHT)
 												{
-																this.pos = this.pos.Add(this.movementSpeed * Shooter.deltaTime, 0);
+																this.pos = this.pos.Add(this.movementSpeed * Time.deltaTime, 0);
 																if (this.pos.GetXInt() >= Renderer.WINDOW_WIDTH - this.size.GetXInt())
 																{
-																				this.direction = Directions.LEFT;
+																				this.direction = Utils.Directions.LEFT;
 																				Buff();
 																}
 												}
 
-												this.timeToShoot -= Shooter.deltaTime;
+												this.timeToShoot -= Time.deltaTime;
 												if (this.timeToShoot <= 0f)
 												{
 																this.timeToShoot = this.attackSpeed;
 
 																Projectile projectile;
 																if (this.damage > 15f)
-																				projectile = new Projectile(this.damage, 10f, this.pos + this.shootingPos, Directions.DOWN, "■");
+																				projectile = new Projectile(this.damage, 10f, this.pos + this.shootingPos, Utils.Directions.DOWN, "■");
 																else
-																				projectile = new Projectile(this.damage, 10f, this.pos + this.shootingPos, Directions.DOWN, "V");
+																				projectile = new Projectile(this.damage, 10f, this.pos + this.shootingPos, Utils.Directions.DOWN, "V");
 																Shooter.AddProjectile(projectile);
 												}
 								}
@@ -139,7 +139,7 @@ namespace Shooter
 
 								public bool HasBeenHitBy(Projectile projectile)
 								{
-												if (projectile.direction.Equals(Directions.DOWN))
+												if (projectile.direction.Equals(Utils.Directions.DOWN))
 																return false;
 												int pX = projectile.pos.GetXInt();
 												int pY = projectile.pos.GetYInt();
