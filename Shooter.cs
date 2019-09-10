@@ -10,9 +10,6 @@ namespace Shooter
 {
 				class Shooter
 				{
-								public static Random random = new Random();
-
-
 								//Projectiles List
 								static List<Projectile> projectiles = new List<Projectile>();
 
@@ -55,15 +52,15 @@ namespace Shooter
 												List<Enemy> enemies = new List<Enemy>();
 												enemies.Add(new Enemy(
 																health: 100f,
-																damage: 10f,
-																pos: new Vector2(Renderer.WINDOW_WIDTH / 2, Utils.GetRandomFloat(random, 10, 15)),
+																damage: 8f,
+																pos: new Vector2(Renderer.WINDOW_WIDTH / 2, Utils.GetRandomFloat(10, 15)),
 																shootingPos: new Vector2(1, 1),
 																movementSpeed: 4f,
 																maxMovementSpeed: 8f,
-																increaseMovementSpeed: 1f,
+																increaseMovementSpeed: 0.5f,
 																initialAttackSpeed: 2.5f,
 																maxAttackSpeed: 0.4f,
-																cooldownReduction: 0.25f,
+																cooldownReduction: 0.4f,
 																size: new Vector2(3, 2),
 																shape: new string[2, 3]
 																{
@@ -74,13 +71,13 @@ namespace Shooter
 												enemies.Add(new Enemy(
 																health: 300f,
 																damage: 30f,
-																pos: new Vector2(Renderer.WINDOW_WIDTH / 2, Utils.GetRandomFloat(random, 0, 5)),
+																pos: new Vector2(Renderer.WINDOW_WIDTH / 2, Utils.GetRandomFloat(0, 5)),
 																shootingPos: new Vector2(2, 1),
 																movementSpeed: 2f,
 																maxMovementSpeed: 3f,
 																increaseMovementSpeed: 0.5f,
 																initialAttackSpeed: 1.25f,
-																maxAttackSpeed: 0.75f,
+																maxAttackSpeed: 0.8f,
 																cooldownReduction: 0.25f,
 																new Vector2(5, 3),
 																shape: new string[3, 5]
@@ -111,7 +108,7 @@ namespace Shooter
 																if (Console.KeyAvailable)
 																				keyPressed = Console.ReadKey(true);
 																else keyPressed = new ConsoleKeyInfo();
-																Utils.ClearKeyBuffer();
+																//Utils.ClearKeyBuffer();
 
 																if (!gameOver)
 																{
@@ -193,7 +190,6 @@ namespace Shooter
 																				Renderer.Put("FPS: " + Math.Round(fps, 0), new Vector2(Renderer.WINDOW_WIDTH / 2, Renderer.WINDOW_HEIGHT - 1));
 																else
 																				Renderer.Put("FPS: " + Math.Round(fps, 1), new Vector2(Renderer.WINDOW_WIDTH / 2, Renderer.WINDOW_HEIGHT - 1));
-
 
 																Renderer.Draw();
 
