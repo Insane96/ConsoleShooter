@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using Shooter.Engine;
+using ConsoleEngine;
 
 namespace Shooter
 {
@@ -95,7 +95,7 @@ namespace Shooter
 
 												do
 												{
-																Engine.Engine.MainLoop();
+																Engine.MainLoop();
 																
 																if (!gameOver)
 																{
