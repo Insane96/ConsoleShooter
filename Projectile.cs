@@ -41,7 +41,8 @@ namespace Shooter
             if (direction.Equals(Utils.Directions.DOWN))
                 this.pos = this.pos.Add(0, movementSpeed * Time.deltaTime);
 
-            if (this.pos.GetYInt() < 0 || this.pos.GetYInt() > Console.WindowHeight - 3) this.isDead = true;
+            if (this.pos.GetYInt() < 0 || this.pos.GetYInt() > Console.WindowHeight - 3)
+																this.isDead = true;
         }
 
         public void Draw()

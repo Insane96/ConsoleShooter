@@ -18,8 +18,6 @@ namespace Shooter
 								public float shootSpeed;
 								public bool isDead = false;
 
-								//public Stats stats;
-
 								public Vector2 shootingPos;
 
 								public Vector2 size;
@@ -36,8 +34,6 @@ namespace Shooter
 												this.shootingPos = shootingPos;
 												this.size = size;
 												this.shape = shape;
-
-												//this.stats = (Stats) XML.Deserialize(typeof(Stats), "stats.xml");
         }
 
         public void Draw()
