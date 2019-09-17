@@ -14,27 +14,27 @@ namespace Shooter
         public Vector2 pos;
         public Utils.Directions direction;
         public bool isDead = false;
-								private string symbol;
-								private Player shooter;
+        private string symbol;
+        private Player shooter;
 
-								public Projectile(float damage, float movementSpeed, Vector2 pos, Utils.Directions direction, string symbol, Player player)
-								{
-												this.damage = damage;
-												this.movementSpeed = movementSpeed;
-												if (direction.Equals(Utils.Directions.UP))
-																this.pos = pos.Add(0, -1);
-												else if (direction.Equals(Utils.Directions.DOWN))
-																this.pos = pos.Add(0, 1);
-												this.direction = direction;
-												this.symbol = symbol;
-												this.shooter = player;
-								}
-								public Projectile(float damage, float movementSpeed, Vector2 pos, Utils.Directions direction, char symbol, Player player) : this(damage, movementSpeed, pos, direction, symbol.ToString(), player)
-								{
-												
-								}
+        public Projectile(float damage, float movementSpeed, Vector2 pos, Utils.Directions direction, string symbol, Player player)
+        {
+            this.damage = damage;
+            this.movementSpeed = movementSpeed;
+            if (direction.Equals(Utils.Directions.UP))
+                this.pos = pos.Add(0, -1);
+            else if (direction.Equals(Utils.Directions.DOWN))
+                this.pos = pos.Add(0, 1);
+            this.direction = direction;
+            this.symbol = symbol;
+            this.shooter = player;
+        }
+        public Projectile(float damage, float movementSpeed, Vector2 pos, Utils.Directions direction, char symbol, Player player) : this(damage, movementSpeed, pos, direction, symbol.ToString(), player)
+        {
 
-								public void Update()
+        }
+
+        public void Update()
         {
             if (direction.Equals(Utils.Directions.UP))
                 this.pos = this.pos.Add(0, -movementSpeed * Time.deltaTime);
@@ -42,12 +42,12 @@ namespace Shooter
                 this.pos = this.pos.Add(0, movementSpeed * Time.deltaTime);
 
             if (this.pos.GetYInt() < 0 || this.pos.GetYInt() > Console.WindowHeight - 3)
-																this.isDead = true;
+                this.isDead = true;
         }
 
         public void Draw()
         {
-												Renderer.Put(this.symbol, this.pos, ConsoleColor.Red);
+            Renderer.Put(this.symbol, this.pos, ConsoleColor.Red);
         }
     }
 }

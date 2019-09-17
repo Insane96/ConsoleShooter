@@ -33,8 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ConsoleEngine">
-      <HintPath>..\ConsoleEngine\bin\Release\netstandard2.0\ConsoleEngine.dll</HintPath>
+    <Reference Include="ConsoleEngine, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ConsoleEngine\bin\Debug\netstandard2.0\ConsoleEngine.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
