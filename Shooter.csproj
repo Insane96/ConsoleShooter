@@ -49,11 +49,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enemies\Enemy.cs" />
-    <Compile Include="Enemies\FastEnemy.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Projectile.cs" />
     <Compile Include="Shooter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stats.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

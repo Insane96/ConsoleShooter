@@ -18,6 +18,8 @@ namespace Shooter
 								public float shootSpeed;
 								public bool isDead = false;
 
+								//public Stats stats;
+
 								public Vector2 shootingPos;
 
 								public Vector2 size;
@@ -26,7 +28,7 @@ namespace Shooter
 
 								public Player(float health, float movementSpeed, float shootSpeed, Vector2 shootingPos, Vector2 size, string[,] shape)
         {
-            pos = new Vector2(Renderer.WINDOW_WIDTH / 2, 27);
+            pos = new Vector2(Renderer.GetWindowWidth() / 2, 27);
             this.health = health;
             this.maxHealth = health;
             this.movementSpeed = movementSpeed;
@@ -34,6 +36,8 @@ namespace Shooter
 												this.shootingPos = shootingPos;
 												this.size = size;
 												this.shape = shape;
+
+												//this.stats = (Stats) XML.Deserialize(typeof(Stats), "stats.xml");
         }
 
         public void Draw()
@@ -63,7 +67,7 @@ namespace Shooter
             switch (direction)
             {
                 case Utils.Directions.RIGHT:
-                    if (this.pos.Add(movementSpeed, 0).GetXInt() < Renderer.WINDOW_WIDTH)
+                    if (this.pos.Add(movementSpeed, 0).GetXInt() < Renderer.GetWindowWidth() - this.size.GetYInt())
                         this.pos = this.pos.Add(movementSpeed, 0);
                     break;
                 case Utils.Directions.LEFT:
@@ -100,7 +104,7 @@ namespace Shooter
         {
 												if (shootTimeCooldown <= 0)
 												{
-																Projectile projectile = new Projectile(2f, 15f, this.pos + this.shootingPos, Utils.Directions.UP, "Û");
+																Projectile projectile = new Projectile(2f, 15f, this.pos + this.shootingPos, Utils.Directions.UP, this.shape[this.shootingPos.GetYInt(), this.shootingPos.GetXInt()], this);
 																Shooter.AddProjectile(projectile);
 																shootTimeCooldown = shootSpeed;
 												}

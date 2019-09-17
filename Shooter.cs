@@ -1,20 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Xml;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using ConsoleEngine;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace Shooter
 {
 				class Shooter
 				{
+								private int myVar;
+
 								//Projectiles List
 								static List<Projectile> projectiles = new List<Projectile>();
 
 								public static bool gameOver = false;
+								public static bool win = false;
+
+								public static float highScore = 0f;
 
 								public static void AddProjectile(Projectile p)
 								{
@@ -23,15 +30,9 @@ namespace Shooter
 
 								static void Main(string[] args)
 								{
-												Console.SetWindowSize(Renderer.WINDOW_WIDTH, Renderer.WINDOW_HEIGHT);
-												Console.CursorVisible = false;
+												Engine.Init(48, 32, false, "Console Shooter");
 
-												Renderer.Init();
-
-												float fps = 0f;
 												float fpsDisplayTime = 1f;
-
-												//Player
 												Player player = new Player(
 																health: 100f,
 																movementSpeed: 1f,
@@ -40,17 +41,79 @@ namespace Shooter
 																size: new Vector2(3, 2),
 																shape: new string[2, 3]
 																{
-																				{" ","■"," "},
-																				{"█","█","█"},
+																								{" ","■"," "},
+																								{"█","█","█"},
 																}
 												);
-
 												//Enemies List
 												List<Enemy> enemies = new List<Enemy>();
-												enemies.Add(new Enemy(
+
+												if (Directory.Exists(Directory.GetCurrentDirectory() + @"\enemies"))
+												{
+																string[] fileList = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\enemies");
+																if (fileList.Length > 0)
+																{
+																				Debug.WriteLine("Directory exist and has files in");
+																				EnemySerializable enemy;
+																				foreach (string file in fileList)
+																				{
+																								enemy = (EnemySerializable)XML.Deserialize(typeof(EnemySerializable), file);
+																								enemies.Add(new Enemy(enemy));
+																				}
+																}
+																else
+																{
+																				Debug.WriteLine("Directory exist but no files in, creating default enemies");
+																				EnemySerializable enemy = new EnemySerializable(
+																								health: 100f,
+																								damage: 8f,
+																								pos: new Vector2(Renderer.GetWindowWidth() / 2, Rand.GetRandomFloat(10, 15)),
+																								shootingPos: new Vector2(1, 1),
+																								movementSpeed: 4f,
+																								maxMovementSpeed: 8f,
+																								increaseMovementSpeed: 0.5f,
+																								initialAttackSpeed: 2.5f,
+																								maxAttackSpeed: 0.4f,
+																								cooldownReduction: 0.4f,
+																								size: new Vector2(3, 2),
+																								shape: new string[2]
+																								{
+																												"███",
+																												" ■ ",
+																								}
+																				);
+																				XML.Serialize(typeof(EnemySerializable), enemy, Directory.GetCurrentDirectory() + @"\enemies\defaultEnemy1.xml");
+																				enemy = new EnemySerializable(
+																								health: 250f,
+																								damage: 30f,
+																								pos: new Vector2(Renderer.GetWindowWidth() / 2, Rand.GetRandomFloat(0, 5)),
+																								shootingPos: new Vector2(2, 1),
+																								movementSpeed: 2f,
+																								maxMovementSpeed: 3f,
+																								increaseMovementSpeed: 0.5f,
+																								initialAttackSpeed: 1.25f,
+																								maxAttackSpeed: 0.8f,
+																								cooldownReduction: 0.25f,
+																								new Vector2(5, 3),
+																								shape: new string[3]
+																								{
+																												"█████",
+																												"█ ■ █",
+																												"█   █",
+																								}
+																				);
+																				XML.Serialize(typeof(EnemySerializable), enemy, Directory.GetCurrentDirectory() + @"\enemies\defaultEnemy2.xml");
+																}
+												}
+												else
+												{
+																Debug.WriteLine("Directory doesn't exist, creating it");
+																Directory.CreateDirectory(Directory.GetCurrentDirectory() + @"\enemies");
+												}
+												/*enemies.Add(new Enemy(
 																health: 100f,
 																damage: 8f,
-																pos: new Vector2(Renderer.WINDOW_WIDTH / 2, Rand.GetRandomFloat(10, 15)),
+																pos: new Vector2(Renderer.GetWindowWidth() / 2, Rand.GetRandomFloat(10, 15)),
 																shootingPos: new Vector2(1, 1),
 																movementSpeed: 4f,
 																maxMovementSpeed: 8f,
@@ -59,16 +122,16 @@ namespace Shooter
 																maxAttackSpeed: 0.4f,
 																cooldownReduction: 0.4f,
 																size: new Vector2(3, 2),
-																shape: new string[2, 3]
+																shape: new string[2]
 																{
-																				{"█","█","█"},
-																				{" ","■"," "},
+																				"███",
+																				" ■ ",
 																}
 												));
 												enemies.Add(new Enemy(
-																health: 300f,
+																health: 250f,
 																damage: 30f,
-																pos: new Vector2(Renderer.WINDOW_WIDTH / 2, Rand.GetRandomFloat(0, 5)),
+																pos: new Vector2(Renderer.GetWindowWidth() / 2, Rand.GetRandomFloat(0, 5)),
 																shootingPos: new Vector2(2, 1),
 																movementSpeed: 2f,
 																maxMovementSpeed: 3f,
@@ -77,13 +140,13 @@ namespace Shooter
 																maxAttackSpeed: 0.8f,
 																cooldownReduction: 0.25f,
 																new Vector2(5, 3),
-																shape: new string[3, 5]
+																shape: new string[3]
 																{
-																				{"█","█","█","█", "█"},
-																				{"█"," ","■"," ", "█"},
-																				{"█"," "," "," ", "█"},
+																				"█████",
+																				"█ ■ █",
+																				"█   █",
 																}
-												));
+												));*/
 
 												/*Console.Beep(329, 100);
 												Console.Beep(329, 150);
@@ -96,9 +159,10 @@ namespace Shooter
 												do
 												{
 																Engine.MainLoop();
-																
-																if (!gameOver)
+
+																if (!gameOver && !win)
 																{
+
 																				//Input
 																				if (Input.IsKeyPressed(ConsoleKey.RightArrow))
 																								player.Move(Utils.Directions.RIGHT);
@@ -133,6 +197,11 @@ namespace Shooter
 																												if (enemy.HasBeenHitBy(projectile))
 																												{
 																																enemy.Damage(projectile.damage);
+																																if (enemy.isDead)
+																																{
+																																				//player.stats.experience++;
+																																				deadEntities.Add(enemy);
+																																}
 																																projectile.isDead = true;
 																												}
 
@@ -140,8 +209,6 @@ namespace Shooter
 																																deadProjectiles.Add(projectile);
 																								}
 
-																								if (enemy.isDead)
-																												deadEntities.Add(enemy);
 																				}
 
 																				foreach (Enemy deadEntity in deadEntities)
@@ -155,6 +222,11 @@ namespace Shooter
 
 																				if (player.isDead)
 																								gameOver = true;
+																}
+
+																if (enemies.Count == 0 && !win)
+																{
+																				win = true;
 																}
 
 																//Draw
@@ -171,21 +243,25 @@ namespace Shooter
 																}
 
 																if (gameOver)
-																				Renderer.Put("Game Over", new Vector2(Renderer.WINDOW_WIDTH / 2 - 4, Renderer.WINDOW_HEIGHT / 2), ConsoleColor.Red);
+																				Renderer.Put("Game Over", new Vector2(Renderer.GetWindowWidth() / 2 - 4, Renderer.GetWindowHeight() / 2 - 1), ConsoleColor.Red);
+																if (win)
+																{
+																				Renderer.Put("You won!", new Vector2(Renderer.GetWindowWidth() / 2 - 3, Renderer.GetWindowHeight() / 2 - 2), ConsoleColor.Green);
+																}
 
-																if (1f / Time.deltaTime >= 10f)
-																				Console.Title = "FPS: " + Math.Round(fps, 0);
-																else
-																				Console.Title = "FPS: " + Math.Round(fps, 1);
-																																
+																//Renderer.Put("Exp: " + Math.Floor(player.stats.experience), new Vector2(Renderer.GetWindowWidth() / 2, Renderer.GetWindowHeight() - 1));
+																//Renderer.Put("Press Esc to save and exit", new Vector2(0, Renderer.GetWindowHeight() - 2));
+
 																fpsDisplayTime -= Time.deltaTime;
 																if (fpsDisplayTime <= 0f)
 																{
-																				fpsDisplayTime = 1f;
-																				fps = (1f / Time.deltaTime);
+																				fpsDisplayTime = 0.5f;
+																				Console.Title = "FPS: " + Math.Round(Engine.fps);
 																}
 
 												} while (!Input.IsKeyPressed(ConsoleKey.Escape));
+
+												//XML.Serialize(typeof(Stats), player.stats, "stats.xml");
 								}
 				}
 }

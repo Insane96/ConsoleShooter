@@ -15,20 +15,26 @@ namespace Shooter
         public Utils.Directions direction;
         public bool isDead = false;
 								private string symbol;
+								private Player shooter;
 
-        public Projectile(float damage, float movementSpeed, Vector2 pos, Utils.Directions direction, string symbol)
-        {
-            this.damage = damage;
-            this.movementSpeed = movementSpeed;
+								public Projectile(float damage, float movementSpeed, Vector2 pos, Utils.Directions direction, string symbol, Player player)
+								{
+												this.damage = damage;
+												this.movementSpeed = movementSpeed;
 												if (direction.Equals(Utils.Directions.UP))
 																this.pos = pos.Add(0, -1);
 												else if (direction.Equals(Utils.Directions.DOWN))
 																this.pos = pos.Add(0, 1);
 												this.direction = direction;
 												this.symbol = symbol;
-        }
+												this.shooter = player;
+								}
+								public Projectile(float damage, float movementSpeed, Vector2 pos, Utils.Directions direction, char symbol, Player player) : this(damage, movementSpeed, pos, direction, symbol.ToString(), player)
+								{
+												
+								}
 
-        public void Update()
+								public void Update()
         {
             if (direction.Equals(Utils.Directions.UP))
                 this.pos = this.pos.Add(0, -movementSpeed * Time.deltaTime);
