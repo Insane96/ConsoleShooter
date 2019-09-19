@@ -22,9 +22,9 @@ namespace Shooter
 
         public Vector2 size;
 
-        public string[,] shape;
+        public string[] shape;
 
-        public Player(float health, float movementSpeed, float shootSpeed, Vector2 shootingPos, Vector2 size, string[,] shape)
+        public Player(float health, float movementSpeed, float shootSpeed, Vector2 shootingPos, Vector2 size, string[] shape)
         {
             pos = new Vector2(Renderer.GetWindowWidth() / 2, 27);
             this.health = health;
@@ -38,12 +38,12 @@ namespace Shooter
 
         public void Draw()
         {
-            for (int x = 0; x < shape.GetLength(1); x++)
+            for (int x = 0; x < shape.Length; x++)
             {
-                for (int y = 0; y < shape.GetLength(0); y++)
+                for (int y = 0; y < shape[x].Length; y++)
                 {
-                    if (!shape[y, x].Equals(" "))
-                        Renderer.Put(shape[y, x], this.pos.Add(x, y), ConsoleColor.Cyan);
+                    if (!shape[x][y].Equals(" "))
+                        Renderer.Put(shape[x][y], this.pos.Add(y, x), ConsoleColor.Cyan);
                 }
             }
             Renderer.Put("Health: " + this.health + "/" + this.maxHealth, new Vector2(0, Console.WindowHeight - 1));
@@ -91,7 +91,11 @@ namespace Shooter
             int eY = this.pos.GetYInt();
             if (pX >= eX && pX < eX + this.size.GetXInt() && pY >= eY && pY < eY + this.size.GetYInt())
             {
-                return true;
+                Vector2 relativePos = new Vector2(projectile.pos.GetXInt() - this.pos.GetXInt(), projectile.pos.GetYInt() - this.pos.GetYInt());
+                if (!this.shape[relativePos.GetYInt()][relativePos.GetXInt()].Equals(" "))
+                {
+                    return true;
+                }
             }
             return false;
         }
@@ -100,7 +104,7 @@ namespace Shooter
         {
             if (shootTimeCooldown <= 0)
             {
-                Projectile projectile = new Projectile(2f, 15f, this.pos + this.shootingPos, Utils.Directions.UP, this.shape[this.shootingPos.GetYInt(), this.shootingPos.GetXInt()], this);
+                Projectile projectile = new Projectile(2f, 15f, this.pos + this.shootingPos, Utils.Directions.UP, this.shape[this.shootingPos.GetYInt()][this.shootingPos.GetXInt()], this);
                 Shooter.AddProjectile(projectile);
                 shootTimeCooldown = shootSpeed;
             }

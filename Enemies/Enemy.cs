@@ -163,8 +163,12 @@ namespace Shooter
             int eY = this.pos.GetYInt();
             if (pX >= eX && pX < eX + this.size.GetXInt() && pY >= eY && pY < eY + this.size.GetYInt())
             {
-                timeSinceDamaged = 0;
-                return true;
+                Vector2 relativePos = new Vector2(projectile.pos.GetXInt() - this.pos.GetXInt(), projectile.pos.GetYInt() - this.pos.GetYInt());
+                if (!this.shape[relativePos.GetYInt()][relativePos.GetXInt()].Equals(" "))
+                {
+                    timeSinceDamaged = 0;
+                    return true;
+                }
             }
             return false;
         }

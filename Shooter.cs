@@ -39,10 +39,10 @@ namespace Shooter
                 shootSpeed: 0.25f,
                 shootingPos: new Vector2(1, 0),
                 size: new Vector2(3, 2),
-                shape: new string[2, 3]
+                shape: new string[2]
                 {
-                        {" ","■"," "},
-                        {"█","█","█"},
+                        " ■ ",
+                        "███",
                 }
             );
 
