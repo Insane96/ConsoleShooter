@@ -8,23 +8,18 @@ using System.Threading.Tasks;
 
 namespace Shooter
 {
-    class Player
+    class Player : GameObject
     {
         public float health;
         public float maxHealth;
         public float movementSpeed;
-        public Vector2 pos;
         public float shootTimeCooldown;
         public float shootSpeed;
         public bool isDead = false;
 
         public Vector2 shootingPos;
 
-        public Vector2 size;
-
-        public string[] shape;
-
-        public Player(float health, float movementSpeed, float shootSpeed, Vector2 shootingPos, Vector2 size, string[] shape)
+        public Player(string name, float health, float movementSpeed, float shootSpeed, Vector2 shootingPos, Vector2 size, string[] shape) : base(name, new Vector2(Renderer.GetWindowWidth() / 2, 27), size, shape, true)
         {
             pos = new Vector2(Renderer.GetWindowWidth() / 2, 27);
             this.health = health;
@@ -36,8 +31,29 @@ namespace Shooter
             this.shape = shape;
         }
 
-        public void Draw()
+        public override void Update()
         {
+            if (this.isDead)
+                return;
+            if (shootTimeCooldown > 0)
+                shootTimeCooldown -= Time.deltaTime;
+
+            //Input
+            if (Input.IsKeyPressed(ConsoleKey.RightArrow))
+                this.Move(Utils.Directions.RIGHT);
+            if (Input.IsKeyPressed(ConsoleKey.LeftArrow))
+                this.Move(Utils.Directions.LEFT);
+            if (Input.IsKeyPressed(ConsoleKey.Spacebar))
+                this.Shoot();
+        }
+
+        public override void Draw()
+        {
+            Renderer.Put("Health: " + this.health + "/" + this.maxHealth, new Vector2(0, Console.WindowHeight - 1));
+
+            if (isDead)
+                return;
+
             for (int x = 0; x < shape.Length; x++)
             {
                 for (int y = 0; y < shape[x].Length; y++)
@@ -46,8 +62,8 @@ namespace Shooter
                         Renderer.Put(shape[x][y], this.pos.Add(y, x), ConsoleColor.Cyan);
                 }
             }
-            Renderer.Put("Health: " + this.health + "/" + this.maxHealth, new Vector2(0, Console.WindowHeight - 1));
         }
+
         public void Damage(float damage)
         {
             this.health -= damage;
@@ -75,37 +91,30 @@ namespace Shooter
             }
         }
 
-        public void Update()
+        public override void OnCollision(GameObject other)
         {
-            if (shootTimeCooldown > 0)
-                shootTimeCooldown -= Time.deltaTime;
-        }
-
-        public bool HasBeenHitBy(Projectile projectile)
-        {
-            if (projectile.direction.Equals(Utils.Directions.UP))
-                return false;
-            int pX = projectile.pos.GetXInt();
-            int pY = projectile.pos.GetYInt();
-            int eX = this.pos.GetXInt();
-            int eY = this.pos.GetYInt();
-            if (pX >= eX && pX < eX + this.size.GetXInt() && pY >= eY && pY < eY + this.size.GetYInt())
+            if (other is Projectile projectile)
             {
-                Vector2 relativePos = new Vector2(projectile.pos.GetXInt() - this.pos.GetXInt(), projectile.pos.GetYInt() - this.pos.GetYInt());
-                if (!this.shape[relativePos.GetYInt()][relativePos.GetXInt()].Equals(" "))
+                if (projectile.direction == Utils.Directions.DOWN)
                 {
-                    return true;
+                    this.Damage(projectile.damage);
+                    Engine.RemoveGameObjectByName(projectile.GetName());
                 }
             }
-            return false;
         }
 
         public void Shoot()
         {
             if (shootTimeCooldown <= 0)
             {
-                Projectile projectile = new Projectile(2f, 15f, this.pos + this.shootingPos, Utils.Directions.UP, this.shape[this.shootingPos.GetYInt()][this.shootingPos.GetXInt()], this);
-                Shooter.AddProjectile(projectile);
+                for (int i = -1; i <= 1; i++)
+                {
+                    Vector2 shootPos = this.pos + this.shootingPos;
+                    shootPos = shootPos.Add(i, 0);
+                    Projectile projectile = new Projectile("projectile" + Rand.GetRandomInt(0, int.MaxValue), 1f, 15f, shootPos, Vector2.One, Utils.Directions.UP, new string[] { "A" });
+                    Shooter.AddProjectile(projectile);
+                    Engine.AddGameObject(projectile);
+                }
                 shootTimeCooldown = shootSpeed;
             }
         }

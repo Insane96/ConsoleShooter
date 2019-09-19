@@ -8,12 +8,11 @@ using System.Threading.Tasks;
 
 namespace Shooter
 {
-    class Enemy
+    class Enemy : GameObject
     {
         public float health;
         public float maxHealth;
         public float damage;
-        public Vector2 pos;
         public Utils.Directions direction;
         public float movementSpeed;
         public float maxMovementSpeed;
@@ -26,13 +25,7 @@ namespace Shooter
 
         private float timeSinceDamaged = -0.5f;
 
-        public Vector2 size;
-
-        public string[] shape;
-
-        public bool isDead = false;
-
-        public Enemy(float health, float damage, Vector2 pos, Vector2 shootingPos, float movementSpeed, float maxMovementSpeed, float increaseMovementSpeed, float initialAttackSpeed, float maxAttackSpeed, float cooldownReduction, Vector2 size, string[] shape)
+        public Enemy(string name, float health, float damage, Vector2 pos, Vector2 shootingPos, float movementSpeed, float maxMovementSpeed, float increaseMovementSpeed, float initialAttackSpeed, float maxAttackSpeed, float cooldownReduction, Vector2 size, string[] shape) : base(name, pos, size, shape)
         {
             this.health = health;
             this.maxHealth = health;
@@ -43,7 +36,6 @@ namespace Shooter
             this.shootingPos = shootingPos;
             this.size = size;
             this.shape = shape;
-            this.pos = pos;
             this.direction = Utils.Directions.LEFT;
             this.attackSpeed = initialAttackSpeed;
             this.timeToShoot = this.attackSpeed;
@@ -51,7 +43,7 @@ namespace Shooter
             this.cooldownReduction = cooldownReduction;
         }
 
-        public Enemy(EnemySerializable enemy)
+        public Enemy(string name, EnemySerializable enemy) : base(name, enemy.pos)
         {
             this.health = enemy.health;
             this.maxHealth = this.health;
@@ -70,7 +62,7 @@ namespace Shooter
             this.cooldownReduction = enemy.cooldownReduction;
         }
 
-        public void Draw()
+        public override void Draw()
         {
             for (int x = 0; x < shape.Length; x++)
             {
@@ -89,7 +81,7 @@ namespace Shooter
             }
         }
 
-        public void Update()
+        public override void Update()
         {
             timeSinceDamaged += Time.deltaTime;
 
@@ -118,16 +110,34 @@ namespace Shooter
                 this.timeToShoot = this.attackSpeed;
 
                 Projectile projectile;
-                projectile = new Projectile(this.damage, 10f, this.pos + this.shootingPos, Utils.Directions.DOWN, this.shape[this.shootingPos.GetYInt()][this.shootingPos.GetXInt()], null);
+                projectile = new Projectile("projectile" + Rand.GetRandomInt(0, int.MaxValue), this.damage, 10f, this.pos + this.shootingPos, Vector2.One, Utils.Directions.DOWN, new string[] { this.shape[this.shootingPos.GetYInt()][this.shootingPos.GetXInt()].ToString() });
                 Shooter.AddProjectile(projectile);
+                Engine.AddGameObject(projectile);
             }
         }
+
+        public override void OnCollision(GameObject other)
+        {
+            if (other is Projectile)
+            {
+                Projectile projectile = (Projectile) other;
+                if (projectile.direction == Utils.Directions.UP)
+                {
+                    this.Damage(projectile.damage);
+                    Engine.RemoveGameObjectByName(projectile.GetName());
+                    this.timeSinceDamaged = 0;
+                }
+            }
+        }
+
         public void Damage(float damage)
         {
             this.health -= damage;
-            this.timeSinceDamaged = 0f;
             if (this.health <= 0f)
-                this.isDead = true;
+            {
+                Engine.RemoveGameObjectByName(this.GetName());
+                Shooter.enemies--;
+            }
         }
 
         private void Buff()
@@ -151,26 +161,6 @@ namespace Shooter
                 return ConsoleColor.DarkYellow;
 
             return ConsoleColor.Red;
-        }
-
-        public bool HasBeenHitBy(Projectile projectile)
-        {
-            if (projectile.direction.Equals(Utils.Directions.DOWN))
-                return false;
-            int pX = projectile.pos.GetXInt();
-            int pY = projectile.pos.GetYInt();
-            int eX = this.pos.GetXInt();
-            int eY = this.pos.GetYInt();
-            if (pX >= eX && pX < eX + this.size.GetXInt() && pY >= eY && pY < eY + this.size.GetYInt())
-            {
-                Vector2 relativePos = new Vector2(projectile.pos.GetXInt() - this.pos.GetXInt(), projectile.pos.GetYInt() - this.pos.GetYInt());
-                if (!this.shape[relativePos.GetYInt()][relativePos.GetXInt()].Equals(" "))
-                {
-                    timeSinceDamaged = 0;
-                    return true;
-                }
-            }
-            return false;
         }
     }
 

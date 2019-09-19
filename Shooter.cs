@@ -16,24 +16,24 @@ namespace Shooter
         //Projectiles List
         static List<Projectile> projectiles = new List<Projectile>();
 
-        //Enemies List
-        static List<Enemy> enemies = new List<Enemy>();
-
         public static bool gameOver = false;
         public static bool win = false;
+
+        public static int enemies = 0;
 
         public static void AddProjectile(Projectile p)
         {
             projectiles.Add(p);
         }
 
-        static void Main(string[] args)
+        static void Main()
         {
             Engine.Init(48, 32, false, "Console Shooter");
             Console.WriteLine("Starting Console Shooter ...");
 
             float fpsDisplayTime = 1f;
             Player player = new Player(
+                name: "player",
                 health: 100f,
                 movementSpeed: 1f,
                 shootSpeed: 0.25f,
@@ -45,6 +45,7 @@ namespace Shooter
                         "███",
                 }
             );
+            Engine.AddGameObject(player);
 
             Console.WriteLine("Beginning enemies initalization ...");
             if (Directory.Exists(Directory.GetCurrentDirectory() + @"\enemies"))
@@ -109,7 +110,7 @@ namespace Shooter
             }
 
             Console.WriteLine("Startup completed!");
-            Thread.Sleep(2000);
+            Thread.Sleep(1500);
             Console.Clear();
 
             do
@@ -118,84 +119,13 @@ namespace Shooter
 
                 if (!gameOver && !win)
                 {
-
-                    //Input
-                    if (Input.IsKeyPressed(ConsoleKey.RightArrow))
-                        player.Move(Utils.Directions.RIGHT);
-                    if (Input.IsKeyPressed(ConsoleKey.LeftArrow))
-                        player.Move(Utils.Directions.LEFT);
-                    if (Input.IsKeyPressed(ConsoleKey.Spacebar))
-                        player.Shoot();
-
-                    //Update
-                    player.Update();
-                    foreach (Enemy enemy in enemies)
-                    {
-                        enemy.Update();
-                    }
-
-                    foreach (Projectile projectile in projectiles)
-                    {
-                        projectile.Update();
-                        if (player.HasBeenHitBy(projectile))
-                        {
-                            projectile.isDead = true;
-                            player.Damage(projectile.damage);
-                        }
-                    }
-
-                    List<Enemy> deadEntities = new List<Enemy>();
-                    List<Projectile> deadProjectiles = new List<Projectile>();
-                    foreach (Enemy enemy in enemies)
-                    {
-                        foreach (Projectile projectile in projectiles)
-                        {
-                            if (enemy.HasBeenHitBy(projectile))
-                            {
-                                enemy.Damage(projectile.damage);
-                                if (enemy.isDead)
-                                {
-                                    //player.stats.experience++;
-                                    deadEntities.Add(enemy);
-                                }
-                                projectile.isDead = true;
-                            }
-
-                            if (projectile.isDead)
-                                deadProjectiles.Add(projectile);
-                        }
-
-                    }
-
-                    foreach (Enemy deadEntity in deadEntities)
-                    {
-                        enemies.Remove(deadEntity);
-                    }
-                    foreach (Projectile deadProjectile in deadProjectiles)
-                    {
-                        projectiles.Remove(deadProjectile);
-                    }
-
                     if (player.isDead)
                         gameOver = true;
                 }
 
-                if (enemies.Count == 0 && !win)
+                if (enemies == 0 && !win)
                 {
                     win = true;
-                }
-
-                //Draw
-                player.Draw();
-
-                foreach (Enemy enemy in enemies)
-                {
-                    enemy.Draw();
-                }
-
-                foreach (Projectile projectile in projectiles)
-                {
-                    projectile.Draw();
                 }
 
                 if (gameOver)
@@ -219,10 +149,13 @@ namespace Shooter
         {
             string[] fileList = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\enemies");
             EnemySerializable enemy;
+            int enemyNumber = 0;
             foreach (string file in fileList)
             {
                 enemy = (EnemySerializable)XML.Deserialize(typeof(EnemySerializable), file);
-                enemies.Add(new Enemy(enemy));
+                Enemy newEnemy = new Enemy("enemy" + enemyNumber++, enemy);
+                enemies++;
+                Engine.AddGameObject(newEnemy);
             }
         }
     }
