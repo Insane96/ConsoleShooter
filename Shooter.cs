@@ -36,7 +36,7 @@ namespace Shooter
                 name: "player",
                 health: 100f,
                 movementSpeed: 1f,
-                shootSpeed: 0.25f,
+                shootSpeed: 0.33f,
                 shootingPos: new Vector2(1, 0),
                 size: new Vector2(3, 2),
                 shape: new string[2]

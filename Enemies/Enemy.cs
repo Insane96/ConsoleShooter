@@ -164,6 +164,7 @@ namespace Shooter
         }
     }
 
+    [Serializable]
     public class EnemySerializable
     {
         public float health;
