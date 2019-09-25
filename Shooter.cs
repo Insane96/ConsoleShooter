@@ -7,24 +7,18 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using ConsoleEngine;
 using System.IO;
+using System.Windows.Input;
 using System.Xml.Serialization;
+using OpenTK.Input;
 
 namespace Shooter
 {
     class Shooter
     {
-        //Projectiles List
-        static List<Projectile> projectiles = new List<Projectile>();
-
         public static bool gameOver = false;
         public static bool win = false;
 
         public static int enemies = 0;
-
-        public static void AddProjectile(Projectile p)
-        {
-            projectiles.Add(p);
-        }
 
         static void Main()
         {
@@ -35,7 +29,7 @@ namespace Shooter
             Player player = new Player(
                 name: "player",
                 health: 100f,
-                movementSpeed: 1f,
+                movementSpeed: 10f,
                 shootSpeed: 0.33f,
                 shootingPos: new Vector2(1, 0),
                 size: new Vector2(3, 2),
@@ -135,14 +129,14 @@ namespace Shooter
                     Renderer.Put("You won!", new Vector2(Renderer.GetWindowWidth() / 2 - 3, Renderer.GetWindowHeight() / 2 - 2), ConsoleColor.Green);
                 }
 
-                fpsDisplayTime -= Time.deltaTime;
+                fpsDisplayTime -= Time.DeltaTime;
                 if (fpsDisplayTime <= 0f)
                 {
                     fpsDisplayTime = 0.5f;
                     Console.Title = "FPS: " + Math.Round(Engine.fps);
                 }
 
-            } while (!Input.IsKeyPressed(ConsoleKey.Escape));
+            } while (!Input.IsKeyPressed(Key.Escape));
         }
 
         private static void LoadEnemies()

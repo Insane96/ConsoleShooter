@@ -14,7 +14,7 @@ namespace Shooter
         public Utils.Directions direction;
         public bool isDead = false;
 
-        public Projectile(string name, float damage, float movementSpeed, Vector2 pos, Vector2 size, Utils.Directions direction, string[] shape) : base(name, pos, size, shape, true)
+        public Projectile(string name, float damage, float movementSpeed, Vector2 pos, Vector2 size, Utils.Directions direction, string[] shape) : base(name, pos, size, shape)
         {
             this.damage = damage;
             this.movementSpeed = movementSpeed;
@@ -24,9 +24,9 @@ namespace Shooter
         public override void Update()
         {
             if (direction.Equals(Utils.Directions.UP))
-                this.pos = this.pos.Add(0, -movementSpeed * Time.deltaTime);
+                this.pos = this.pos.Add(0, -movementSpeed * Time.DeltaTime);
             if (direction.Equals(Utils.Directions.DOWN))
-                this.pos = this.pos.Add(0, movementSpeed * Time.deltaTime);
+                this.pos = this.pos.Add(0, movementSpeed * Time.DeltaTime);
 
             if (this.pos.GetYInt() < 0 || this.pos.GetYInt() > Console.WindowHeight - 3)
                 Engine.RemoveGameObjectByName(this.GetName());

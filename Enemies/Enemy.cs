@@ -72,22 +72,22 @@ namespace Shooter
                         Renderer.Put(shape[x][y], this.pos.Add(y, x), GetHealthColor());
                 }
             }
-            if (timeSinceDamaged < 1.5f)
+            /*if (timeSinceDamaged < 1.5f)
             {
                 Vector2 p = this.pos.Add(0, -1);
                 if (this.pos.GetYInt() == 0)
                     p = p.Add(0, this.size.GetXInt() - 1);
                 Renderer.Put(health.ToString(), p);
-            }
+            }*/
         }
 
         public override void Update()
         {
-            timeSinceDamaged += Time.deltaTime;
+            timeSinceDamaged += Time.DeltaTime;
 
             if (direction == Utils.Directions.LEFT)
             {
-                this.pos = this.pos.Add(-this.movementSpeed * Time.deltaTime, 0);
+                this.pos = this.pos.Add(-this.movementSpeed * Time.DeltaTime, 0);
                 if (this.pos.GetXInt() <= 0)
                 {
                     this.direction = Utils.Directions.RIGHT;
@@ -96,7 +96,7 @@ namespace Shooter
             }
             else if (direction == Utils.Directions.RIGHT)
             {
-                this.pos = this.pos.Add(this.movementSpeed * Time.deltaTime, 0);
+                this.pos = this.pos.Add(this.movementSpeed * Time.DeltaTime, 0);
                 if (this.pos.GetXInt() >= Renderer.GetWindowWidth() - this.size.GetXInt())
                 {
                     this.direction = Utils.Directions.LEFT;
@@ -104,14 +104,13 @@ namespace Shooter
                 }
             }
 
-            this.timeToShoot -= Time.deltaTime;
+            this.timeToShoot -= Time.DeltaTime;
             if (this.timeToShoot <= 0f)
             {
                 this.timeToShoot = this.attackSpeed;
 
                 Projectile projectile;
                 projectile = new Projectile("projectile" + Rand.GetRandomInt(0, int.MaxValue), this.damage, 10f, this.pos + this.shootingPos, Vector2.One, Utils.Directions.DOWN, new string[] { this.shape[this.shootingPos.GetYInt()][this.shootingPos.GetXInt()].ToString() });
-                Shooter.AddProjectile(projectile);
                 Engine.AddGameObject(projectile);
             }
         }

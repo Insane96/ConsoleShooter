@@ -1,10 +1,6 @@
 ﻿using ConsoleEngine;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OpenTK.Input;
 
 namespace Shooter
 {
@@ -19,7 +15,7 @@ namespace Shooter
 
         public Vector2 shootingPos;
 
-        public Player(string name, float health, float movementSpeed, float shootSpeed, Vector2 shootingPos, Vector2 size, string[] shape) : base(name, new Vector2(Renderer.GetWindowWidth() / 2, 27), size, shape, true)
+        public Player(string name, float health, float movementSpeed, float shootSpeed, Vector2 shootingPos, Vector2 size, string[] shape) : base(name, new Vector2(Renderer.GetWindowWidth() / 2, 27), size, shape)
         {
             pos = new Vector2(Renderer.GetWindowWidth() / 2, 27);
             this.health = health;
@@ -36,14 +32,14 @@ namespace Shooter
             if (this.isDead)
                 return;
             if (shootTimeCooldown > 0)
-                shootTimeCooldown -= Time.deltaTime;
+                shootTimeCooldown -= Time.DeltaTime;
 
             //Input
-            if (Input.IsKeyPressed(ConsoleKey.RightArrow))
+            if (Input.IsKeyPressed(Key.Right))
                 this.Move(Utils.Directions.RIGHT);
-            if (Input.IsKeyPressed(ConsoleKey.LeftArrow))
+            if (Input.IsKeyPressed(Key.Left))
                 this.Move(Utils.Directions.LEFT);
-            if (Input.IsKeyPressed(ConsoleKey.Spacebar))
+            if (Input.IsKeyPressed(Key.Space))
                 this.Shoot();
         }
 
@@ -79,12 +75,12 @@ namespace Shooter
             switch (direction)
             {
                 case Utils.Directions.RIGHT:
-                    if (this.pos.Add(movementSpeed, 0).GetXInt() < Renderer.GetWindowWidth() - this.size.GetYInt())
-                        this.pos = this.pos.Add(movementSpeed, 0);
+                    if (this.pos.Add(movementSpeed * Time.DeltaTime, 0).GetXInt() < Renderer.GetWindowWidth() - this.size.GetYInt())
+                        this.pos = this.pos.Add(movementSpeed * Time.DeltaTime, 0);
                     break;
                 case Utils.Directions.LEFT:
-                    if (this.pos.Add(-movementSpeed, 0).GetXInt() >= 0)
-                        this.pos = this.pos.Add(-movementSpeed, 0);
+                    if (this.pos.Add(-movementSpeed * Time.DeltaTime, 0).GetXInt() >= 0)
+                        this.pos = this.pos.Add(-movementSpeed * Time.DeltaTime, 0);
                     break;
                 default:
                     break;
@@ -112,7 +108,6 @@ namespace Shooter
                     Vector2 shootPos = this.pos + this.shootingPos;
                     shootPos = shootPos.Add(i, 0);
                     Projectile projectile = new Projectile("projectile" + Rand.GetRandomInt(0, int.MaxValue), 1f, 15f, shootPos, Vector2.One, Utils.Directions.UP, new string[] { "A" });
-                    Shooter.AddProjectile(projectile);
                     Engine.AddGameObject(projectile);
                 }
                 shootTimeCooldown = shootSpeed;
