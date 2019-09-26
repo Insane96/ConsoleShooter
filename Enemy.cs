@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -68,7 +69,7 @@ namespace Shooter
             {
                 for (int y = 0; y < shape[x].Length; y++)
                 {
-                    if (!shape[x][y].Equals(" "))
+                    if (!shape[x][y].Equals(' '))
                         Renderer.Put(shape[x][y], this.pos.Add(y, x), GetHealthColor());
                 }
             }
@@ -150,16 +151,16 @@ namespace Shooter
                 this.attackSpeed = this.maxAttackSpeed;
         }
 
-        public ConsoleColor GetHealthColor()
+        public Color GetHealthColor()
         {
             if (this.health / this.maxHealth > 0.8)
-                return ConsoleColor.Green;
+                return Color.Green;
             else if (this.health / this.maxHealth > 0.5)
-                return ConsoleColor.Yellow;
-            else if (this.health / this.maxHealth > 0.1)
-                return ConsoleColor.DarkYellow;
+                return Color.YellowGreen;
+            else if (this.health / this.maxHealth > 0.15)
+                return Color.Yellow;
 
-            return ConsoleColor.Red;
+            return Color.OrangeRed;
         }
     }
 

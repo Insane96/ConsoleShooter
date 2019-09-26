@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Xml;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Diagnostics;
+using System.Drawing;
 using ConsoleEngine;
 using System.IO;
-using System.Windows.Input;
-using System.Xml.Serialization;
 using OpenTK.Input;
 
 namespace Shooter
@@ -22,7 +16,7 @@ namespace Shooter
 
         static void Main()
         {
-            Engine.Init(48, 32, false, "Console Shooter");
+            Engine.Init(48, 32, "Console Shooter");
             Console.WriteLine("Starting Console Shooter ...");
 
             float fpsDisplayTime = 1f;
@@ -30,7 +24,7 @@ namespace Shooter
                 name: "player",
                 health: 100f,
                 movementSpeed: 10f,
-                shootSpeed: 0.33f,
+                shootSpeed: 0.5f,
                 shootingPos: new Vector2(1, 0),
                 size: new Vector2(3, 2),
                 shape: new string[2]
@@ -123,10 +117,10 @@ namespace Shooter
                 }
 
                 if (gameOver)
-                    Renderer.Put("Game Over", new Vector2(Renderer.GetWindowWidth() / 2 - 4, Renderer.GetWindowHeight() / 2 - 1), ConsoleColor.Red);
+                    Renderer.Put("Game Over", new Vector2(Renderer.GetWindowWidth() / 2 - 4, Renderer.GetWindowHeight() / 2 - 1), Color.Red);
                 if (win)
                 {
-                    Renderer.Put("You won!", new Vector2(Renderer.GetWindowWidth() / 2 - 3, Renderer.GetWindowHeight() / 2 - 2), ConsoleColor.Green);
+                    Renderer.Put("You won!", new Vector2(Renderer.GetWindowWidth() / 2 - 3, Renderer.GetWindowHeight() / 2 - 2), Color.Green);
                 }
 
                 fpsDisplayTime -= Time.DeltaTime;

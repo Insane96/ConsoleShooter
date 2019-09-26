@@ -1,6 +1,7 @@
 ﻿using ConsoleEngine;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace Shooter
                 for (int y = 0; y < shape[x].Length; y++)
                 {
                     if (!shape[x][y].Equals(" "))
-                        Renderer.Put(shape[x][y], this.pos.Add(y, x), ConsoleColor.Red);
+                        Renderer.Put(shape[x][y], this.pos.Add(y, x), Color.Red);
                 }
             }
         }
