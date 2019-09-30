@@ -25,6 +25,7 @@ namespace Shooter
         public float cooldownReduction;
 
         private float timeSinceDamaged = -0.5f;
+        private bool isDead = false;
 
         public Enemy(string name, float health, float damage, Vector2 pos, Vector2 shootingPos, float movementSpeed, float maxMovementSpeed, float increaseMovementSpeed, float initialAttackSpeed, float maxAttackSpeed, float cooldownReduction, Vector2 size, string[] shape) : base(name, pos, size, shape)
         {
@@ -70,16 +71,9 @@ namespace Shooter
                 for (int y = 0; y < shape[x].Length; y++)
                 {
                     if (!shape[x][y].Equals(' '))
-                        Renderer.Put(shape[x][y], this.pos.Add(y, x), GetHealthColor());
+                        Renderer.Put(shape[x][y], this.pos.Add(y, x), GetColorByHealth());
                 }
             }
-            /*if (timeSinceDamaged < 1.5f)
-            {
-                Vector2 p = this.pos.Add(0, -1);
-                if (this.pos.GetYInt() == 0)
-                    p = p.Add(0, this.size.GetXInt() - 1);
-                Renderer.Put(health.ToString(), p);
-            }*/
         }
 
         public override void Update()
@@ -110,17 +104,26 @@ namespace Shooter
             {
                 this.timeToShoot = this.attackSpeed;
 
-                Projectile projectile;
-                projectile = new Projectile("projectile" + Rand.GetRandomInt(0, int.MaxValue), this.damage, 10f, this.pos + this.shootingPos, Vector2.One, Utils.Directions.DOWN, new string[] { this.shape[this.shootingPos.GetYInt()][this.shootingPos.GetXInt()].ToString() });
+                Projectile projectile = new Projectile(
+                    "projectile" + Rand.GetRandomInt(0, int.MaxValue), 
+                    this.damage, 
+                    10f, 
+                    this.pos + this.shootingPos, 
+                    Vector2.One, 
+                    Utils.Directions.DOWN, 
+                    new string[]
+                    {
+                        this.shape[this.shootingPos.GetYInt()][this.shootingPos.GetXInt()].ToString() 
+                    }
+                );
                 Engine.AddGameObject(projectile);
             }
         }
 
         public override void OnCollision(GameObject other)
         {
-            if (other is Projectile)
+            if (other is Projectile projectile)
             {
-                Projectile projectile = (Projectile) other;
                 if (projectile.direction == Utils.Directions.UP)
                 {
                     this.Damage(projectile.damage);
@@ -151,16 +154,16 @@ namespace Shooter
                 this.attackSpeed = this.maxAttackSpeed;
         }
 
-        public Color GetHealthColor()
+        public ConsoleColor GetColorByHealth()
         {
             if (this.health / this.maxHealth > 0.8)
-                return Color.Green;
+                return ConsoleColor.Green;
             else if (this.health / this.maxHealth > 0.5)
-                return Color.YellowGreen;
+                return ConsoleColor.Yellow;
             else if (this.health / this.maxHealth > 0.15)
-                return Color.Yellow;
+                return ConsoleColor.DarkYellow;
 
-            return Color.OrangeRed;
+            return ConsoleColor.Red;
         }
     }
 

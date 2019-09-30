@@ -1,10 +1,5 @@
 ﻿using ConsoleEngine;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Shooter
 {
@@ -15,11 +10,15 @@ namespace Shooter
         public Utils.Directions direction;
         public bool isDead = false;
 
+        private ConsoleColor color;
+
         public Projectile(string name, float damage, float movementSpeed, Vector2 pos, Vector2 size, Utils.Directions direction, string[] shape) : base(name, pos, size, shape)
         {
             this.damage = damage;
             this.movementSpeed = movementSpeed;
             this.direction = direction;
+
+            this.color = ConsoleColor.Red;
         }
 
         public override void Update()
@@ -39,8 +38,8 @@ namespace Shooter
             {
                 for (int y = 0; y < shape[x].Length; y++)
                 {
-                    if (!shape[x][y].Equals(" "))
-                        Renderer.Put(shape[x][y], this.pos.Add(y, x), Color.Red);
+                    if (!shape[x][y].Equals(' '))
+                        Renderer.Put(shape[x][y], this.pos.Add(y, x), color);
                 }
             }
         }

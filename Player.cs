@@ -56,7 +56,7 @@ namespace Shooter
                 for (int y = 0; y < shape[x].Length; y++)
                 {
                     if (!shape[x][y].Equals(' '))
-                        Renderer.Put(shape[x][y], this.pos.Add(y, x), Color.Aqua);
+                        Renderer.Put(shape[x][y], this.pos.Add(y, x), ConsoleColor.Cyan);
                 }
             }
         }

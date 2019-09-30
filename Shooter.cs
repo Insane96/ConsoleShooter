@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Threading;
-using System.Drawing;
 using ConsoleEngine;
 using System.IO;
+using System.Threading;
 using OpenTK.Input;
 
 namespace Shooter
@@ -24,7 +23,7 @@ namespace Shooter
                 name: "player",
                 health: 100f,
                 movementSpeed: 10f,
-                shootSpeed: 0.5f,
+                shootSpeed: 0.4f,
                 shootingPos: new Vector2(1, 0),
                 size: new Vector2(3, 2),
                 shape: new string[2]
@@ -35,7 +34,7 @@ namespace Shooter
             );
             Engine.AddGameObject(player);
 
-            Console.WriteLine("Beginning enemies initalization ...");
+            Console.WriteLine("Beginning enemies initialization ...");
             if (Directory.Exists(Directory.GetCurrentDirectory() + @"\enemies"))
             {
                 string[] fileList = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\enemies");
@@ -117,10 +116,10 @@ namespace Shooter
                 }
 
                 if (gameOver)
-                    Renderer.Put("Game Over", new Vector2(Renderer.GetWindowWidth() / 2 - 4, Renderer.GetWindowHeight() / 2 - 1), Color.Red);
+                    Renderer.Put("Game Over", new Vector2(Renderer.GetWindowWidth() / 2 - 4, Renderer.GetWindowHeight() / 2 - 1), ConsoleColor.Red);
                 if (win)
                 {
-                    Renderer.Put("You won!", new Vector2(Renderer.GetWindowWidth() / 2 - 3, Renderer.GetWindowHeight() / 2 - 2), Color.Green);
+                    Renderer.Put("You won!", new Vector2(Renderer.GetWindowWidth() / 2 - 3, Renderer.GetWindowHeight() / 2 - 2), ConsoleColor.Green);
                 }
 
                 fpsDisplayTime -= Time.DeltaTime;
@@ -137,14 +136,14 @@ namespace Shooter
         {
             string[] fileList = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\enemies");
             EnemySerializable enemy;
-            int enemyNumber = 0;
             foreach (string file in fileList)
             {
                 enemy = (EnemySerializable)XML.Deserialize(typeof(EnemySerializable), file);
-                Enemy newEnemy = new Enemy("enemy" + enemyNumber++, enemy);
-                enemies++;
+                Enemy newEnemy = new Enemy("enemy" + enemies++, enemy);
                 Engine.AddGameObject(newEnemy);
             }
+
+            Console.WriteLine($"Loaded {enemies} enemies.");
         }
     }
 }
